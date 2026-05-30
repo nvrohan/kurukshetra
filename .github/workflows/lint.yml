@@ -25,10 +25,16 @@ jobs:
                    Dockerfile .dockerignore \
                    export_presets.cfg \
                    tools/build-server.sh \
+                   tools/build-apk.sh \
+                   tools/gen-debug-keystore.sh \
                    server/oci/deploy.sh \
                    server/systemd/kurukshetra.service \
                    docs/DEPLOY.md \
-                   docs/decisions/0008-oci-manual-account-handoff.md; do
+                   docs/ANDROID.md \
+                   scenes/touch_hud.tscn \
+                   scripts/ui/touch_hud.gd \
+                   docs/decisions/0008-oci-manual-account-handoff.md \
+                   docs/decisions/0010-android-debug-keystore.md; do
             test -f "$f" || { echo "MISSING: $f"; exit 1; }
           done
           echo "all required files present"

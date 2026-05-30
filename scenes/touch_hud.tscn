@@ -1,0 +1,183 @@
+[gd_scene load_steps=2 format=3 uid="uid://b0kuru000touchhud"]
+
+[ext_resource type="Script" path="res://scripts/ui/touch_hud.gd" id="1_touch"]
+
+[node name="TouchHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("1_touch")
+
+[node name="MoveStick" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = -260.0
+offset_right = 260.0
+offset_bottom = -80.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Base" type="ColorRect" parent="MoveStick"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(1, 1, 1, 0.18)
+mouse_filter = 2
+
+[node name="Knob" type="ColorRect" parent="MoveStick"]
+layout_mode = 0
+offset_right = 70.0
+offset_bottom = 70.0
+color = Color(1, 1, 1, 0.45)
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="MoveStick"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = 4.0
+offset_right = 40.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "MOVE"
+horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="LookStick" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -260.0
+offset_right = -80.0
+offset_bottom = -80.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Base" type="ColorRect" parent="LookStick"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(1, 1, 1, 0.12)
+mouse_filter = 2
+
+[node name="Knob" type="ColorRect" parent="LookStick"]
+layout_mode = 0
+offset_right = 60.0
+offset_bottom = 60.0
+color = Color(1, 1, 1, 0.4)
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="LookStick"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = 4.0
+offset_right = 40.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "LOOK"
+horizontal_alignment = 1
+mouse_filter = 2
+
+[node name="ActionButtons" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -340.0
+offset_top = -440.0
+offset_right = -20.0
+offset_bottom = -270.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="FireBtn" type="Button" parent="ActionButtons"]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 0.0
+offset_right = 320.0
+offset_bottom = 100.0
+text = "FIRE"
+action_mode = 0
+
+[node name="JumpBtn" type="Button" parent="ActionButtons"]
+layout_mode = 0
+offset_left = 110.0
+offset_top = 0.0
+offset_right = 210.0
+offset_bottom = 100.0
+text = "JUMP"
+action_mode = 0
+
+[node name="ReloadBtn" type="Button" parent="ActionButtons"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 100.0
+offset_bottom = 100.0
+text = "RELOAD"
+action_mode = 0
+
+[node name="InteractBtn" type="Button" parent="ActionButtons"]
+layout_mode = 0
+offset_left = 220.0
+offset_top = -110.0
+offset_right = 320.0
+offset_bottom = -10.0
+text = "[E]"
+action_mode = 0
+
+[node name="StanceButtons" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = -380.0
+offset_right = 320.0
+offset_bottom = -280.0
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="CrouchBtn" type="Button" parent="StanceButtons"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 110.0
+offset_bottom = 100.0
+text = "CROUCH"
+action_mode = 0
+
+[node name="ProneBtn" type="Button" parent="StanceButtons"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 0.0
+offset_right = 230.0
+offset_bottom = 100.0
+text = "PRONE"
+action_mode = 0

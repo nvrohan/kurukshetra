@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://b0kuru000match0"]
+[gd_scene load_steps=11 format=3 uid="uid://b0kuru000match0"]
 
 [ext_resource type="Script" path="res://scripts/match/match.gd" id="1_match"]
 [ext_resource type="Script" path="res://scripts/match/zone_manager.gd" id="2_zone"]
 [ext_resource type="PackedScene" uid="uid://b0kuru000player" path="res://scenes/player.tscn" id="3_player"]
 [ext_resource type="Script" path="res://scripts/loot/loot_spawner.gd" id="4_loot"]
 [ext_resource type="Script" path="res://scripts/ui/match_hud.gd" id="5_hud"]
+[ext_resource type="PackedScene" uid="uid://b0kuru000touchhud" path="res://scenes/touch_hud.tscn" id="6_touch"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1"]
 size = Vector2(200, 200)
@@ -255,3 +256,5 @@ grow_vertical = 0
 text = ""
 horizontal_alignment = 1
 mouse_filter = 2
+
+[node name="TouchHud" parent="HUD" instance=ExtResource("6_touch")]

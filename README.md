@@ -66,7 +66,19 @@ For a packaged dedicated-server binary (the one D4 deploys to OCI):
 ./build/server/kurukshetra-server.x86_64 --headless -- --server
 ```
 
-### Deploy to OCI Always Free (D4)
+### Build the Android APK (D5)
+
+After D4 ships the local game, the same project exports as a debug-signed
+APK for sideload onto a phone. See
+[`docs/ANDROID.md`](docs/ANDROID.md) for the full sideload guide.
+
+```bash
+./tools/gen-debug-keystore.sh   # one-time
+./tools/build-apk.sh            # produces build/kurukshetra-debug.apk
+adb install -r build/kurukshetra-debug.apk
+```
+
+### Deploy to OCI Always Free (D6)
 
 See [`docs/DEPLOY.md`](docs/DEPLOY.md). After Rohan's one-time OCI signup
 (see [ADR 0008](docs/decisions/0008-oci-manual-account-handoff.md) for
@@ -117,6 +129,6 @@ the full §7 layout. Quick reference:
 | 1 | Architecture doc + ADRs | ✅ Done |
 | 2 | Godot project scaffold | ✅ Done |
 | 3 | Local-multiplayer prototype (movement + 1 weapon + zone shrink) | ✅ Done |
-| 4 | Local-complete game (full MVP playable on this VM) | 🚧 In progress (4.0 ✅) |
-| 5 | Android APK with touch controls | ⏳ Pending |
+| 4 | Local-complete game (full MVP playable on this VM) | ✅ Done |
+| 5 | Android APK with touch controls | ✅ Done (debug-signed sideload — see [ADR 0010](docs/decisions/0010-android-debug-keystore.md)) |
 | 6 | OCI / cloud deploy | ✅ Done (early — see STATUS.md) |
