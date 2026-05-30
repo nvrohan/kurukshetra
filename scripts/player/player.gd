@@ -65,6 +65,35 @@ func _ready() -> void:
 	_apply_stance_visuals(stance)
 	print("[Player %d] ready, authority=%d, camera_local=%s" % [peer_id, get_multiplayer_authority(), camera.current])
 
+# --- Look / camera control ------------------------------------------------
+# Yaw is applied to the body (so movement, which is relative to transform.basis,
+# follows where you look). Pitch is applied to the SpringArm3D and clamped.
+const LOOK_PITCH_MIN := deg_to_rad(-75.0)
+const LOOK_PITCH_MAX := deg_to_rad(70.0)
+const MOUSE_LOOK_SENS := 0.003   # radians per pixel (desktop)
+var _pitch: float = 0.0
+
+# Public look API — called by TouchHud (mobile) with a per-frame delta, and by
+# _unhandled_input (desktop mouse). delta is in "look units" already scaled by
+# the caller; we apply a small internal factor so touch + mouse feel similar.
+func apply_look(look_delta: Vector2) -> void:
+	if not is_multiplayer_authority():
+		return
+	# Yaw: turn the whole body left/right.
+	rotate_y(-look_delta.x)
+	# Pitch: tilt the camera arm up/down, clamped.
+	_pitch = clamp(_pitch - look_delta.y, LOOK_PITCH_MIN, LOOK_PITCH_MAX)
+	if spring_arm:
+		spring_arm.rotation.x = _pitch
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Desktop mouse-look (when captured). Mobile look comes via apply_look()
+	# called directly from TouchHud, not through synthetic mouse events.
+	if not is_multiplayer_authority():
+		return
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		apply_look(event.relative * MOUSE_LOOK_SENS)
+
 func _physics_process(delta: float) -> void:
 	# Only the input-authority peer drives movement (D3 model: each client
 	# moves their own player; server just relays. D4+ may flip to

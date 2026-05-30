@@ -57,13 +57,35 @@ var _vleft: float = 0.0
 var _vright: float = 0.0
 
 func _ready() -> void:
-	# Only show on mobile. Desktop builds keep the desktop input map.
-	if not OS.has_feature("mobile") and not OS.has_feature("touch"):
+	# Decide whether this is a touch device. Be GENEROUS: a false negative
+	# here freezes the player (no controls + set_process_input(false)), which
+	# is exactly the bug we are fixing. Show controls if ANY signal says touch.
+	var os_name := OS.get_name()
+	var is_mobile_os := os_name == "Android" or os_name == "iOS"
+	var has_mobile_feat := OS.has_feature("mobile")
+	var has_touch_feat := OS.has_feature("touch")
+	var touchscreen := DisplayServer.is_touchscreen_available()
+	# Allow a manual override for desktop testing: run with --touch-hud.
+	var forced := "--touch-hud" in OS.get_cmdline_user_args()
+	var show_touch := is_mobile_os or has_mobile_feat or has_touch_feat or touchscreen or forced
+
+	print("[TouchHud] os=%s mobile_feat=%s touch_feat=%s touchscreen=%s forced=%s -> show=%s" % [
+		os_name, has_mobile_feat, has_touch_feat, touchscreen, forced, show_touch])
+
+	if not show_touch:
+		# Desktop without touch: hide widgets but DO NOT kill _input — harmless,
+		# and keeps behaviour debuggable. Just stay invisible.
 		visible = false
-		set_process_input(false)
 		return
-	# Cover the whole screen but pass non-widget taps through.
+
+	visible = true
+	# Make sure we actually receive screen-touch/drag events. _input() fires
+	# regardless of mouse_filter, but be explicit and keep the root pass-through
+	# so taps on empty areas reach the 3D world.
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	set_process_input(true)
+	# Ensure the HUD fills the viewport even if instanced oddly.
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_reset_knob(move_knob, move_base)
 	_reset_knob(look_knob, look_base)
 	_wire_buttons()
@@ -153,9 +175,30 @@ func _set_axis(action: String, prev: float, cur: float) -> void:
 		Input.action_release(action)
 
 func _emit_look(rel: Vector2) -> void:
-	# Synthesise a mouse-motion event so existing code that reads
-	# InputEventMouseMotion in player.gd / camera scripts keeps working.
-	var ev := InputEventMouseMotion.new()
-	ev.relative = rel * LOOK_SENSITIVITY
-	ev.velocity = rel * LOOK_SENSITIVITY
-	Input.parse_input_event(ev)
+	# Drive look by calling the local player's apply_look() directly. Synthetic
+	# InputEventMouseMotion does NOT reliably reach gameplay code on Android,
+	# so we resolve our own input-authority player and rotate it.
+	var p := _local_player()
+	if p and p.has_method("apply_look"):
+		# Scale screen-pixel delta into radians. Tuned to feel close to mouse.
+		p.apply_look(rel * TOUCH_LOOK_SENS)
+
+const TOUCH_LOOK_SENS := 0.005   # radians per screen pixel
+
+# Cache the local player lookup; the match repopulates Players each round.
+var _cached_player: Node = null
+func _local_player() -> Node:
+	if _cached_player and is_instance_valid(_cached_player):
+		return _cached_player
+	var my_id := multiplayer.get_unique_id() if multiplayer.has_multiplayer_peer() else 1
+	# Players live under Match/Players/<peer_id> (see match.gd).
+	var match_node := get_tree().get_first_node_in_group("match")
+	if match_node == null:
+		return null
+	var players := match_node.get_node_or_null("Players")
+	if players == null:
+		return null
+	var node := players.get_node_or_null(str(my_id))
+	if node:
+		_cached_player = node
+	return node
