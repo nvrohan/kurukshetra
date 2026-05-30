@@ -55,7 +55,7 @@ var _revive_progress: float = 0.0
 @onready var camera: Camera3D = $SpringArm3D/Camera3D
 @onready var spring_arm: SpringArm3D = $SpringArm3D
 @onready var weapon: Node3D = $WeaponMount/WeaponStub
-@onready var mesh_inst: MeshInstance3D = $Mesh
+@onready var mesh_inst: Node3D = $Mesh
 @onready var collision: CollisionShape3D = $Collision
 
 func _ready() -> void:
@@ -158,9 +158,12 @@ func _apply_stance_visuals(s: int) -> void:
 			body_height = HEIGHT_CROUCH
 		_:
 			body_height = HEIGHT_STAND
-	if mesh_inst and mesh_inst.mesh is CapsuleMesh:
-		(mesh_inst.mesh as CapsuleMesh).height = body_height
-		mesh_inst.position.y = body_height * 0.5
+	# v0.1.1: Mesh is now a Node3D wrapping the character GLB (was a CapsuleMesh
+	# in v0.1.0). Lower the visual model on crouch/prone so stance reads at a
+	# glance; the model's feet stay at the body origin (y=0).
+	if mesh_inst:
+		var lower: float = HEIGHT_STAND - body_height
+		mesh_inst.position.y = -lower * 0.5
 	if collision and collision.shape is CapsuleShape3D:
 		(collision.shape as CapsuleShape3D).height = body_height
 		collision.position.y = body_height * 0.5

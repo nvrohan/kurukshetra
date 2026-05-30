@@ -58,3 +58,4 @@ crash*.log
 
 # v0.1.1 — raw asset zips, gitignored; only imported .tres/.glb/.obj are committed
 assets/_downloads/
+.godot.bak/
