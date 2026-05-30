@@ -1,0 +1,22 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cpt6fgqyu5x37"
+path="res://.godot/imported/pistol-coonan.obj-09e024d46291ef8459fbc746d26a9ee9.mesh"
+
+[deps]
+
+files=["res://.godot/imported/pistol-coonan.obj-09e024d46291ef8459fbc746d26a9ee9.mesh"]
+
+source_file="res://assets/models/weapons/pistol-coonan.obj"
+dest_files=["res://.godot/imported/pistol-coonan.obj-09e024d46291ef8459fbc746d26a9ee9.mesh", "res://.godot/imported/pistol-coonan.obj-09e024d46291ef8459fbc746d26a9ee9.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true
+force_disable_mesh_compression=false

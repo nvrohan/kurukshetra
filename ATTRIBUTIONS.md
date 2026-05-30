@@ -10,21 +10,26 @@ license, and attribution required by the original creator.
 
 The MVP asset budget is documented in `docs/ARCHITECTURE.md` §5.
 
-## v0.1 status
+## v0.1.1 status
 
-**No third-party assets imported yet.** The repo currently contains:
+v0.1.1 imports the first batch of CC0 3D content. Per ADR 0011 the chosen
+upstream is **OpenGameArt.org + Poly Haven + ambientCG** (Kenney's `kenney.nl`
+asset pages JS-load their download links and are not curl-reachable from a
+headless cron worker — the CDN URLs are not exposed in HTML; OGA + ambientCG
+expose direct attachment URLs, and that's what made v0.1.1 actually buildable).
 
-| File | License | Author | Notes |
-|---|---|---|---|
-| `icon.svg` | CC0 | Kurukshetra contributors | Drawn for this project (chakra placeholder) |
+| File | License | Author | Source | SHA256 (upstream zip) |
+|---|---|---|---|---|
+| `icon.svg` | CC0 | Kurukshetra contributors | Drawn for this project | — |
+| `assets/models/characters/character{1..5}.glb` | CC0 | PS Tech (OGA) | https://opengameart.org/content/10x-blocky-character-bundle (`character-bundle.zip` → `character.zip`) | `79b150f220b9b0272a483f5dfd851d7ddb23fdce23b0d2617126ecb7bd2823f8` |
+| `assets/models/weapons/{pistol-coonan,smg-mp5,sniper,shotgun,revolver-python}.{obj,mtl}` | CC0 | Bonsaiheldin (OGA) | https://opengameart.org/content/3d-weapons-pack (`weapons_pack_guns_0.zip`) | `ba1cd7d2061184eee2a6412fccc5d6b809bb526e42f617e92f28de0c92f2e7ba` |
+| `assets/models/props/{barrel_mesh,crate_mesh}.obj` + PNGs | CC0 | rubberduck (OGA) | https://opengameart.org/content/crate-barrel-bundle (`crate&barrel.zip`) | `ba001a1908c7bb2244276ce4d28d2e8183bd6f28885428a30c5d1412cadfc706` |
+| `assets/textures/ground/grass_*.jpg` | CC0 | ambientCG | https://ambientcg.com/view?id=Grass001 (`Grass001_1K-JPG.zip`) | `902f447a64171c8099589642d5bf2d1d6e52c40e94d957eb78eae722084b0cfb` |
+| `assets/textures/skybox/sky_kloofendal_1k.hdr` | CC0 | Greg Zaal (Poly Haven) | https://polyhaven.com/a/kloofendal_48d_partly_cloudy_puresky | `fd94c84997b8a3c353b62c2125a9b44e19509956986a126e472684432a02d798` |
 
-When deliverable 3 begins, every Kenney FPS Pack model, Freesound clip,
-OpenGameArt texture, and Kenney UI sprite will be added to the table below
-in this format:
-
-```
-| assets/models/weapon_pistol_p1.glb | CC0 | Kenney (kenney.nl) | Kenney FPS Pack v1.2 |
-```
+The original zips live in `assets/_downloads/` (gitignored). Only imported
+`.glb`, `.obj`, `.mtl`, `.png`, `.jpg`, `.hdr`, and Godot-generated `.import`
+sidecars are committed.
 
 ## License rules
 
