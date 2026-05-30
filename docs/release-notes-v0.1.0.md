@@ -1,7 +1,7 @@
 # Kurukshetra v0.1.0 — first sideload-able Android build
 
 > **Faceless mythology-themed battle royale, free + open source forever.**
-> No Krafton, no Tencent, no ads, no in-app purchases — just the game.
+> No corporate publishers, no ads, no in-app purchases — just the game.
 
 This is the v0.1 milestone build: a fully-playable Android APK you can
 sideload onto your phone and play with friends on the same WiFi.
