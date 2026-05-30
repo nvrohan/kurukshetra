@@ -277,7 +277,7 @@ Source (CC0/CC-BY) ─► import/ folder (raw FBX/OBJ/PNG/WAV)
 1. Install Godot Android export templates (one-time: download from godotengine.org, ~150MB)
 2. Generate debug keystore: `keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000`
 3. Configure export preset: `Android (debug)` with min SDK 24 (Android 7.0), target SDK 34
-4. Build: `godot --headless --export-debug "Android" build/akhada-royale-debug.apk`
+4. Build: `godot --headless --export-debug "Android" build/kurukshetra-debug.apk`
 
 ### 6.3 CI (GitHub Actions)
 - Trigger: push to `main` or tag `v*`
@@ -299,7 +299,7 @@ Source (CC0/CC-BY) ─► import/ folder (raw FBX/OBJ/PNG/WAV)
 ## 7. Repository Layout
 
 ```
-akhada-royale/
+kurukshetra/
 ├── README.md
 ├── LICENSE                       # MIT
 ├── ATTRIBUTIONS.md               # all CC0/CC-BY assets credited
@@ -344,7 +344,7 @@ akhada-royale/
 │   ├── build_attributions.py
 │   └── package_release.sh
 ├── server/
-│   └── systemd/akhada-server@.service
+│   └── systemd/kurukshetra-server@.service
 └── docs/
     ├── ARCHITECTURE.md           # this file
     ├── NETWORKING.md
@@ -395,7 +395,7 @@ akhada-royale/
 
 Reply "**approved**" or "**approved with changes: X, Y**" and I'll:
 1. Write the 3-5 decision-log entries (`docs/decisions/000*.md`)
-2. Initialize the Godot project at `~/akhada-royale/` with the §7 layout
+2. Initialize the Godot project at `~/kurukshetra/` with the §7 layout
 3. Push to GitHub as a public MIT repo
 4. Send back a short "deliverable 2 done" summary
 

@@ -1,22 +1,52 @@
-# Python
+# Godot 4 .gitignore
+# Per: https://github.com/github/gitignore/blob/main/Godot.gitignore
+
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Godot-specific ignores
+.import/
+export.cfg
+export_presets.cfg
+*.translation
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+mono_crash.*.json
+
+# System / IDE / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*~
+
+# Build output
+build/
+dist/
+*.apk
+*.aab
+*.pck
+*.zip
+!docs/**/*.zip
+
+# Android signing — debug keystore is OK to commit (it's the public android-debug
+# key by convention), but real release keys must never enter the repo.
+release.keystore
+*.jks
+
+# Python (used for tools/*.py)
 __pycache__/
 *.pyc
 .venv/
 venv/
-.env
 
-# Node
-node_modules/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Editors
-.vscode/
-.idea/
-
-# Logs / data
+# Logs
 *.log
-*.jsonl
-data/
+crash*.log

@@ -1,0 +1,40 @@
+# Force LF line endings for Godot text resources (avoid Windows CRLF noise)
+*.gd      text eol=lf
+*.tscn    text eol=lf
+*.tres    text eol=lf
+*.cfg     text eol=lf
+*.godot   text eol=lf
+*.import  text eol=lf
+*.md      text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.json    text eol=lf
+*.sh      text eol=lf
+*.py      text eol=lf
+
+# Binary assets (no merge / no diff)
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.webp    binary
+*.tga     binary
+*.exr     binary
+*.hdr     binary
+*.ogg     binary
+*.wav     binary
+*.mp3     binary
+*.glb     binary
+*.gltf    binary
+*.fbx     binary
+*.obj     binary
+*.blend   binary
+*.ttf     binary
+*.otf     binary
+
+# Mark generated files in GitHub diffs
+docs/**/*.md  linguist-documentation
+*.gd          linguist-language=GDScript
+
+# Hint: Godot scenes/resources are text — readable in PRs
+*.tscn        linguist-language=GDScript
+*.tres        linguist-language=GDScript

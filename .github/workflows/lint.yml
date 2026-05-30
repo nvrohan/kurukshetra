@@ -1,0 +1,94 @@
+name: lint
+
+# Sanity checks for the Kurukshetra repo. Runs on every push & PR to main.
+# Cheap, no Godot install needed yet — that's deliverable 5's job.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  structure:
+    name: repo structure
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: required files exist
+        run: |
+          set -e
+          for f in README.md LICENSE ATTRIBUTIONS.md project.godot icon.svg \
+                   docs/ARCHITECTURE.md \
+                   docs/decisions/0001-project-name.md; do
+            test -f "$f" || { echo "MISSING: $f"; exit 1; }
+          done
+          echo "all required files present"
+
+      - name: required dirs exist
+        run: |
+          set -e
+          for d in scenes scripts/autoload scripts/player scripts/weapons \
+                   scripts/world scripts/ui resources/weapons \
+                   resources/characters assets/models assets/textures \
+                   assets/audio assets/ui maps tools server/systemd; do
+            test -d "$d" || { echo "MISSING DIR: $d"; exit 1; }
+          done
+          echo "all required dirs present"
+
+      - name: project.godot is parseable (sanity)
+        run: |
+          set -e
+          grep -q '^config/name="Kurukshetra"' project.godot
+          grep -q '^run/main_scene=' project.godot
+          grep -q '^NetworkManager=' project.godot
+          echo "project.godot looks sane"
+
+  attribution-stub:
+    name: ATTRIBUTIONS.md is up-to-date (stub)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: every assets/ file has an ATTRIBUTIONS row
+        run: |
+          set -e
+          shopt -s globstar nullglob
+          missing=0
+          for f in assets/**/*; do
+            [ -f "$f" ] || continue
+            base=$(basename "$f")
+            # .gdkeep markers exempt
+            [ "$base" = ".gdkeep" ] && continue
+            if ! grep -qF "$f" ATTRIBUTIONS.md; then
+              echo "no attribution for: $f"
+              missing=$((missing+1))
+            fi
+          done
+          if [ "$missing" -gt 0 ]; then
+            echo "$missing asset(s) missing from ATTRIBUTIONS.md"
+            exit 1
+          fi
+          echo "all assets attributed (or none yet)"
+
+  no-trademark-references:
+    name: no PUBG/BGMI/Krafton/Garena/Free Fire references
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: scan repo
+        run: |
+          set -e
+          # Banned terms in code/docs/scenes — case-insensitive. ATTRIBUTIONS.md
+          # is allowed to mention them in the "do not use" rules section.
+          banned='pubg|bgmi|krafton|garena|free.fire'
+          if grep -ri -E "$banned" \
+              --include='*.gd' --include='*.tscn' --include='*.tres' \
+              --include='*.md' --include='*.cfg' --include='*.godot' \
+              --exclude='ATTRIBUTIONS.md' --exclude='ARCHITECTURE.md' \
+              --exclude='0001-project-name.md' --exclude='README.md' \
+              .; then
+            echo "FOUND banned-trademark reference"
+            exit 1
+          fi
+          echo "no trademark references found"
