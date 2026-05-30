@@ -117,6 +117,6 @@ the full §7 layout. Quick reference:
 | 1 | Architecture doc + ADRs | ✅ Done |
 | 2 | Godot project scaffold | ✅ Done |
 | 3 | Local-multiplayer prototype (movement + 1 weapon + zone shrink) | ✅ Done |
-| 4 | Dedicated-server build + OCI Always Free deploy doc | ✅ Done (this commit) |
-| 5 | Android APK with touch controls | ⏳ Next |
-| 6 | Playtest checklist + first bug bash | ⏳ Pending |
+| 4 | Local-complete game (full MVP playable on this VM) | 🚧 In progress (4.0 ✅) |
+| 5 | Android APK with touch controls | ⏳ Pending |
+| 6 | OCI / cloud deploy | ✅ Done (early — see STATUS.md) |
