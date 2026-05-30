@@ -27,9 +27,9 @@ discarded. D6 lands early but does not unblock anything; D4 is still next.
 | 1 | Architecture doc + 5 ADRs | ✅ shipped | `2d0ef39` |
 | 2 | Godot project scaffold | ✅ shipped | `2849857` |
 | 3 | Local-multiplayer prototype (per ADR 0006) | ✅ shipped | `151ab7e` |
-| 4 | **Local-complete game** (full MVP playable on this VM) | 🚧 in progress (4.0 ✅) | — |
-| 5 | Android APK with touch controls | ⏳ deferred until D4 ✅ | — |
-| 6 | OCI / cloud deploy (was D4) | ✅ shipped early | this commit |
+| 4 | **Local-complete game** (full MVP playable on this VM) | ✅ shipped (4.10 deferred per ADR 0009) | this commit |
+| 5 | Android APK with touch controls | ⏳ — | — |
+| 6 | OCI / cloud deploy (was D4) | ✅ shipped early | `346c6e8` |
 
 ## v0.1 SHIPPED?
 
@@ -55,13 +55,13 @@ last squad standing.
 | 4.2 | 5 weapons with proper stats (pistol, 2 ARs, SMG, sniper) | ✅ | `f3eb837` |
 | 4.3 | HP + armor (3 plate tiers) | ✅ | `3bd6fdb` |
 | 4.4 | Knockdown + revive (downed state, 30s bleedout, 5s revive) | ✅ | `3bd6fdb` |
-| 4.5 | Loot system (ground spawns, 4 rarity tiers, E-key pickup) | ⏳ | — |
-| 4.6 | Kill feed HUD (last 5 kills, 5s fade) | ⏳ | — |
-| 4.7 | Lobby UI with room-code entry | ⏳ | — |
-| 4.8 | Zone phases 3-5 (full 6-phase schedule) | ⏳ | — |
-| 4.9 | 30+ spawn points (rename map to `training_island`) | ⏳ | — |
-| 4.10 | Kenney FPS Pack assets imported + ATTRIBUTIONS updated | ⏳ | — |
-| 4.11 | Full smoke test (5min run, no errors, all systems green) | ⏳ | — |
+| 4.5 | Loot system (ground spawns, 4 rarity tiers, E-key pickup) | ✅ | `e4f2a62` |
+| 4.6 | Kill feed HUD (last 5 kills, 5s fade) | ✅ | `e4f2a62` |
+| 4.7 | Lobby UI with room-code entry | ✅ | this commit |
+| 4.8 | Zone phases 3-5 (full 6-phase schedule) | ✅ | `e4f2a62` |
+| 4.9 | 30+ spawn points (rename map to `training_island`) | ✅ | `e4f2a62` |
+| 4.10 | Kenney FPS Pack assets imported + ATTRIBUTIONS updated | 🚧 awaiting-manual (ADR 0009) | this commit |
+| 4.11 | Full smoke test (5min run, no errors, all systems green) | ✅ | this commit |
 
 When 4.0–4.11 are ✅, write `D4 SHIPPED — local game complete, ready for
 Android packaging` and ping Rohan to confirm before starting D5.

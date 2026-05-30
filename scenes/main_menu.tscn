@@ -24,9 +24,9 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -200.0
-offset_top = 80.0
+offset_top = 60.0
 offset_right = 200.0
-offset_bottom = 160.0
+offset_bottom = 140.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 64
 text = "Kurukshetra"
@@ -38,12 +38,12 @@ anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -300.0
-offset_top = 160.0
+offset_top = 140.0
 offset_right = 300.0
-offset_bottom = 200.0
+offset_bottom = 180.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 18
-text = "v0.1 prototype — free, open-source mobile battle royale"
+text = "v0.1 — free, open-source mobile battle royale"
 horizontal_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
@@ -53,21 +53,67 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -120.0
-offset_top = -80.0
-offset_right = 120.0
-offset_bottom = 100.0
+offset_left = -180.0
+offset_top = -160.0
+offset_right = 180.0
+offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 12
 
 [node name="HostButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+text = "Host new match"
+
+[node name="HostedCodeLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+
+[node name="JoinSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="JoinHeading" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Join existing match"
+horizontal_alignment = 1
+
+[node name="CodeRow" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="CodeLabel" type="Label" parent="VBoxContainer/CodeRow"]
+layout_mode = 2
+size_flags_horizontal = 0
+custom_minimum_size = Vector2(80, 0)
+text = "Room code"
+
+[node name="CodeEdit" type="LineEdit" parent="VBoxContainer/CodeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "ABCD"
+max_length = 4
+
+[node name="HostRow" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HostLabel" type="Label" parent="VBoxContainer/HostRow"]
+layout_mode = 2
+size_flags_horizontal = 0
+custom_minimum_size = Vector2(80, 0)
 text = "Host"
+
+[node name="HostEdit" type="LineEdit" parent="VBoxContainer/HostRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "127.0.0.1"
+placeholder_text = "127.0.0.1 or 192.168.x.x"
 
 [node name="JoinButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-text = "Join 127.0.0.1"
+text = "Join match"
+
+[node name="QuitSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
 
 [node name="QuitButton" type="Button" parent="VBoxContainer"]
 layout_mode = 2
