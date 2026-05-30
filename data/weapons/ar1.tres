@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponDef" load_steps=2 format=3 uid="uid://b0kuru000wpn1ar1"]
+
+[ext_resource type="Script" path="res://scripts/weapons/weapon_def.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"ar1"
+display_name = "AR-1 (balanced)"
+damage = 24.0
+rpm = 600.0
+max_range = 120.0
+falloff_start = 50.0
+falloff_min_pct = 0.5
+headshot_mult = 1.6
+mag_size = 30
+reload_seconds = 2.2

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponDef" load_steps=2 format=3 uid="uid://b0kuru000wpn0pist"]
+
+[ext_resource type="Script" path="res://scripts/weapons/weapon_def.gd" id="1_def"]
+
+[resource]
+script = ExtResource("1_def")
+id = &"pistol"
+display_name = "Pistol"
+damage = 18.0
+rpm = 360.0
+max_range = 60.0
+falloff_start = 20.0
+falloff_min_pct = 0.6
+headshot_mult = 2.0
+mag_size = 12
+reload_seconds = 1.5
