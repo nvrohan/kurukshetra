@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://b0kuru000grassmat"]
+
+[ext_resource type="Texture2D" uid="uid://caoyrlhf6tsfm" path="res://assets/textures/ground/grass_color.jpg" id="1_col"]
+[ext_resource type="Texture2D" uid="uid://bbgbjjvqn8tbr" path="res://assets/textures/ground/grass_normal.jpg" id="2_nrm"]
+[ext_resource type="Texture2D" uid="uid://bjh2a37telynp" path="res://assets/textures/ground/grass_roughness.jpg" id="3_rgh"]
+[ext_resource type="Texture2D" uid="uid://b776pc6juy822" path="res://assets/textures/ground/grass_ao.jpg" id="4_ao"]
+
+[resource]
+resource_name = "GrassGround"
+albedo_texture = ExtResource("1_col")
+roughness_texture = ExtResource("3_rgh")
+normal_enabled = true
+normal_texture = ExtResource("2_nrm")
+ao_enabled = true
+ao_texture = ExtResource("4_ao")
+uv1_scale = Vector3(50, 50, 50)
+uv1_triplanar = false

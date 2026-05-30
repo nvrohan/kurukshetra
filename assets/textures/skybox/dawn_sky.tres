@@ -1,0 +1,10 @@
+[gd_resource type="Sky" load_steps=3 format=3 uid="uid://b0kuru000sky0"]
+
+[ext_resource type="Texture2D" uid="uid://gjxkhbac7tca" path="res://assets/textures/skybox/sky_kloofendal_1k.hdr" id="1_pano"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_1"]
+panorama = ExtResource("1_pano")
+energy_multiplier = 1.1
+
+[resource]
+sky_material = SubResource("PanoramaSkyMaterial_1")

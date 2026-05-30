@@ -1,19 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://b0kuru000player"]
+[gd_scene load_steps=9 format=3 uid="uid://b0kuru000player"]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
 [ext_resource type="Script" path="res://scripts/weapons/weapon_stub.gd" id="2_weapon"]
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_1"]
-radius = 0.4
-height = 1.8
+[ext_resource type="PackedScene" uid="uid://b4h3rrv8hrqqw" path="res://assets/models/characters/character1.glb" id="3_char"]
+[ext_resource type="Mesh" uid="uid://cpt6fgqyu5x37" path="res://assets/models/weapons/pistol-coonan.obj" id="4_wpnmesh"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.4
 height = 1.8
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
-albedo_color = Color(0.3, 0.6, 0.9, 1)
-roughness = 0.8
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1"]
 properties/0/path = NodePath(".:position")
@@ -49,10 +43,9 @@ collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_player")
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-mesh = SubResource("CapsuleMesh_1")
-surface_material_override/0 = SubResource("StandardMaterial3D_1")
+[node name="Mesh" type="Node3D" parent="."]
+
+[node name="CharacterModel" parent="Mesh" instance=ExtResource("3_char")]
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -71,6 +64,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.4, 0)
 script = ExtResource("2_weapon")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WeaponMount/WeaponStub"]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, -0.3)
+mesh = ExtResource("4_wpnmesh")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_1")
