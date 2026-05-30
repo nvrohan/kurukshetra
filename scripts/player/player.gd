@@ -25,6 +25,11 @@ const STANCE_STAND := 0
 const STANCE_CROUCH := 1
 const STANCE_PRONE := 2
 
+# Armor (D4.3): tier -> (max plate hp, absorb percent of incoming dmg).
+# Tier 0 means "no armor", tiers 1-3 are increasingly rare loot.
+const ARMOR_MAX := [0.0, 50.0, 75.0, 100.0]
+const ARMOR_ABSORB := [0.0, 0.20, 0.40, 0.55]
+
 # Collider/camera heights per stance.
 const HEIGHT_STAND := 1.8
 const HEIGHT_CROUCH := 1.2
@@ -40,6 +45,12 @@ const CAM_HEIGHT_PRONE := 0.4
 @export var is_dead: bool = false
 @export var is_downed: bool = false
 @export var stance: int = STANCE_STAND
+
+# Local revive progress (input-authority side only; not replicated).
+const REVIVE_RANGE := 2.0
+const REVIVE_HOLD_SECONDS := 5.0
+var _revive_target: Player = null
+var _revive_progress: float = 0.0
 
 @onready var camera: Camera3D = $SpringArm3D/Camera3D
 @onready var spring_arm: SpringArm3D = $SpringArm3D
@@ -110,6 +121,9 @@ func _physics_process(delta: float) -> void:
 	if not is_downed and Input.is_action_just_pressed("fire") and weapon and weapon.has_method("try_fire"):
 		weapon.try_fire(camera.global_transform.origin, -camera.global_transform.basis.z)
 
+	# Revive (D4.4): hold interact for 5 s next to a downed teammate.
+	_update_revive(delta)
+
 func _current_speed() -> float:
 	match stance:
 		STANCE_PRONE:
@@ -161,18 +175,17 @@ func apply_damage(amount: float, source_peer: int) -> void:
 		return
 	if is_dead:
 		return
-	# Armor absorbs a fraction of incoming damage (D4.3): light=20%, med=40%, heavy=55%.
+	# Armor absorbs a fraction of incoming damage (D4.3); per-tier values live
+	# in ARMOR_ABSORB. Plate hp drains as it absorbs; tier resets to 0 once
+	# plate is empty so unarmored hits don't keep absorbing.
 	var absorbed := 0.0
-	if armor > 0.0:
-		var pct := 0.0
-		match armor_tier:
-			1: pct = 0.20
-			2: pct = 0.40
-			3: pct = 0.55
+	if armor > 0.0 and armor_tier > 0 and armor_tier < ARMOR_ABSORB.size():
+		var pct: float = ARMOR_ABSORB[armor_tier]
 		absorbed = amount * pct
+		# Plate also can't absorb more than it has hp left (one-to-one).
+		absorbed = min(absorbed, armor)
 		armor = max(0.0, armor - absorbed)
 		amount -= absorbed
-		# Once armor is gone, tier resets so future hits don't keep absorbing.
 		if armor <= 0.0:
 			armor_tier = 0
 	hp = max(0.0, hp - amount)
@@ -211,6 +224,64 @@ func revive(by_peer: int) -> void:
 	hp = 30.0  # revive comes back at low health
 	stance = STANCE_STAND
 	print("[Player %d] revived by peer %d" % [peer_id, by_peer])
+
+## Server-only: equip an armor plate of the given tier (1-3). Refills the
+## plate to its tier max regardless of previous tier (loot pickup overrides).
+func equip_armor(tier: int) -> void:
+	if not multiplayer.is_server():
+		return
+	if tier <= 0 or tier >= ARMOR_MAX.size():
+		return
+	armor_tier = tier
+	armor = ARMOR_MAX[tier]
+	print("[Player %d] equipped armor tier %d (%.0f hp)" % [peer_id, tier, armor])
+
+## Server-only: heal HP up to MAX_HP. Called by med-kit pickup (D4.5).
+func heal(amount: float) -> void:
+	if not multiplayer.is_server() or is_dead:
+		return
+	hp = min(MAX_HP, hp + amount)
+
+## Local revive progress (D4.4). Runs only on the input-authority side of a
+## *standing* player. While interact is held within REVIVE_RANGE of a downed
+## teammate, _revive_progress accumulates; at REVIVE_HOLD_SECONDS the revive
+## RPC fires (server validates).
+func _update_revive(delta: float) -> void:
+	if is_downed or is_dead:
+		_revive_target = null
+		_revive_progress = 0.0
+		return
+	if not Input.is_action_pressed("interact"):
+		_revive_target = null
+		_revive_progress = 0.0
+		return
+	# Pick the closest downed teammate inside REVIVE_RANGE.
+	var best: Player = null
+	var best_d2: float = REVIVE_RANGE * REVIVE_RANGE
+	for p in get_tree().get_nodes_in_group("players"):
+		if p == self or not (p is Player):
+			continue
+		var pl: Player = p
+		if not pl.is_downed or pl.is_dead:
+			continue
+		var d2: float = global_position.distance_squared_to(pl.global_position)
+		if d2 < best_d2:
+			best_d2 = d2
+			best = pl
+	if best == null:
+		_revive_target = null
+		_revive_progress = 0.0
+		return
+	# Reset progress if we switched targets.
+	if best != _revive_target:
+		_revive_target = best
+		_revive_progress = 0.0
+	_revive_progress += delta
+	if _revive_progress >= REVIVE_HOLD_SECONDS:
+		print("[Player %d] reviving peer %d (5s held)" % [peer_id, _revive_target.peer_id])
+		_revive_target.revive.rpc_id(1, peer_id)
+		_revive_target = null
+		_revive_progress = 0.0
 
 # Server-side bleedout tick (called by Match._process every second).
 func server_bleedout_tick(dps: float) -> void:

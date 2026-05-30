@@ -16,6 +16,7 @@ const PLAYER_SCENE := preload("res://scenes/player.tscn")
 @onready var spawner: MultiplayerSpawner = $MultiplayerSpawner
 
 var _spawn_index := 0
+var _bleedout_accumulator := 0.0  # seconds; ticks 30s bleedout for downed players (D4.4)
 
 func _ready() -> void:
 	add_to_group("match")
@@ -34,6 +35,19 @@ func _ready() -> void:
 		print("[Match] server-side ready, spawn-on-connect armed")
 	else:
 		print("[Match] client-side ready, peer_id=%d" % multiplayer.get_unique_id())
+
+func _physics_process(delta: float) -> void:
+	# Server-only: tick bleedout for downed players (D4.4). 30 s pool drains
+	# at 1 hp/s; when hp hits 0 the player dies. server_bleedout_tick handles
+	# the actual hp decrement and death RPC.
+	if not (multiplayer.is_server() or not multiplayer.has_multiplayer_peer()):
+		return
+	_bleedout_accumulator += delta
+	if _bleedout_accumulator >= 1.0:
+		_bleedout_accumulator -= 1.0
+		for p in players_root.get_children():
+			if p.has_method("server_bleedout_tick"):
+				p.server_bleedout_tick(1.0)
 
 func _server_spawn_player(peer_id: int) -> void:
 	if not (multiplayer.is_server() or not multiplayer.has_multiplayer_peer()):
