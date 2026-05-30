@@ -1,8 +1,8 @@
 # 0006 — Deliverable 3 prototype scope (frozen)
 
-**Status:** Proposed (awaiting Rohan's "go" to ratify and execute)
+**Status:** Accepted (ratified by Rohan 2026-05-30 via standing approval — "consider as GO till shipped")
 **Date:** 2026-05-30
-**Decided by:** Rohan (pending), drafted by agent
+**Decided by:** Rohan
 
 ## Decision
 
