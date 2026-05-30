@@ -51,10 +51,30 @@ godot --editor project.godot
 
 Press **F5** in the editor to launch the main menu scene.
 
-### Run headless server (no transport wired yet — placeholder)
+### Run headless server (D3+ working, D4 dedicated-server export shipped)
+
+For dev iteration on localhost (server + 2 clients):
 
 ```bash
-godot --headless --main-pack . -- --server
+./tools/run-prototype.sh headless
+```
+
+For a packaged dedicated-server binary (the one D4 deploys to OCI):
+
+```bash
+./tools/build-server.sh
+./build/server/kurukshetra-server.x86_64 --headless -- --server
+```
+
+### Deploy to OCI Always Free (D4)
+
+See [`docs/DEPLOY.md`](docs/DEPLOY.md). After Rohan's one-time OCI signup
+(see [ADR 0008](docs/decisions/0008-oci-manual-account-handoff.md) for
+why that step is manual):
+
+```bash
+./tools/build-server.sh
+HOST=ubuntu@<oci_public_ip> ./server/oci/deploy.sh
 ```
 
 ## Project layout
@@ -95,8 +115,8 @@ the full §7 layout. Quick reference:
 | # | Deliverable | Status |
 |---|---|---|
 | 1 | Architecture doc + ADRs | ✅ Done |
-| 2 | Godot project scaffold | ✅ Done (this commit) |
-| 3 | Local-multiplayer prototype (movement + 1 weapon + zone shrink) | ⏳ Next |
-| 4 | Dedicated-server build + OCI Always Free deploy doc | ⏳ Pending |
-| 5 | Android APK with touch controls | ⏳ Pending |
+| 2 | Godot project scaffold | ✅ Done |
+| 3 | Local-multiplayer prototype (movement + 1 weapon + zone shrink) | ✅ Done |
+| 4 | Dedicated-server build + OCI Always Free deploy doc | ✅ Done (this commit) |
+| 5 | Android APK with touch controls | ⏳ Next |
 | 6 | Playtest checklist + first bug bash | ⏳ Pending |

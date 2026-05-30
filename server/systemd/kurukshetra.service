@@ -1,0 +1,42 @@
+[Unit]
+Description=Kurukshetra dedicated server (battle royale match host)
+Documentation=https://github.com/nvrohan/kurukshetra/blob/main/docs/DEPLOY.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=kurukshetra
+Group=kurukshetra
+WorkingDirectory=/opt/kurukshetra
+ExecStart=/opt/kurukshetra/kurukshetra-server --headless -- --server
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Hardening — OCI Always Free hosts are exposed to the public internet.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/kurukshetra
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictNamespaces=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+MemoryDenyWriteExecute=false
+# ENet uses UDP; allow inet sockets only.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+
+# Resource limits — Always Free Compute (1 OCPU / 1 GB RAM ARM, or 2 GB AMD).
+LimitNOFILE=4096
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target

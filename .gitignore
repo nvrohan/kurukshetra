@@ -8,7 +8,9 @@
 # Godot-specific ignores
 .import/
 export.cfg
-export_presets.cfg
+# We DO commit export_presets.cfg — it's the dedicated-server preset (D4)
+# and the Android touch-control preset (D5). Reproducibility > convention.
+# export_presets.cfg
 *.translation
 
 # Imported translations (automatically generated from CSV files)
@@ -50,3 +52,6 @@ venv/
 # Logs
 *.log
 crash*.log
+
+# Hermes agent working files (plans, scratch)
+.hermes/

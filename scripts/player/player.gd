@@ -24,9 +24,8 @@ const MAX_HP := 100.0
 @onready var weapon: Node3D = $WeaponMount/WeaponStub
 
 func _ready() -> void:
-	# Set multiplayer authority. The peer that owns this player handles input;
-	# everyone else just renders the synchronized state.
-	set_multiplayer_authority(peer_id)
+	# Authority is set by Match._spawn_player_node BEFORE _ready (required
+	# for MultiplayerSynchronizer). Here we just verify and wire camera.
 	# Only the local player's camera should be active.
 	camera.current = (peer_id == multiplayer.get_unique_id())
 	print("[Player %d] ready, authority=%d, camera_local=%s" % [peer_id, get_multiplayer_authority(), camera.current])

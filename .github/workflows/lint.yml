@@ -21,7 +21,14 @@ jobs:
           set -e
           for f in README.md LICENSE ATTRIBUTIONS.md project.godot icon.svg \
                    docs/ARCHITECTURE.md \
-                   docs/decisions/0001-project-name.md; do
+                   docs/decisions/0001-project-name.md \
+                   Dockerfile .dockerignore \
+                   export_presets.cfg \
+                   tools/build-server.sh \
+                   server/oci/deploy.sh \
+                   server/systemd/kurukshetra.service \
+                   docs/DEPLOY.md \
+                   docs/decisions/0008-oci-manual-account-handoff.md; do
             test -f "$f" || { echo "MISSING: $f"; exit 1; }
           done
           echo "all required files present"

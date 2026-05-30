@@ -1,0 +1,13 @@
+# Kurukshetra .dockerignore — keep the build context lean.
+.git
+.github
+.hermes
+build/
+*.log
+*.x86_64
+*.apk
+*.tpz
+docs/
+node_modules/
+.vscode/
+.idea/
