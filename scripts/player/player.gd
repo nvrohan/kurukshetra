@@ -123,6 +123,13 @@ func _physics_process(delta: float) -> void:
 
 	# Revive (D4.4): hold interact for 5 s next to a downed teammate.
 	_update_revive(delta)
+	# Pickup (D4.5): tap interact (E) when standing on a LootPickup.
+	# Pickup uses tap-press, revive uses hold; they don't conflict because
+	# revive only fires when a downed teammate is in range.
+	if Input.is_action_just_pressed("interact") and not is_downed and _revive_target == null:
+		_try_request_pickup()
+	# Pickup hint (local HUD only, runs every frame on input-authority side).
+	_update_pickup_hint()
 
 func _current_speed() -> float:
 	match stance:
@@ -190,13 +197,18 @@ func apply_damage(amount: float, source_peer: int) -> void:
 			armor_tier = 0
 	hp = max(0.0, hp - amount)
 	print("[Player %d] hit by peer %d for %.1f (armor absorbed %.1f) -> hp=%.1f armor=%.1f" % [peer_id, source_peer, amount, absorbed, hp, armor])
+	# Remember last damage source so kill-feed can attribute on death (D4.6).
+	_last_damage_peer = source_peer
+	_last_damage_weapon = _weapon_display_for(source_peer)
 	if hp <= 0.0:
 		# D4.4: knockdown rather than outright kill (handled by Match later).
 		# For now, set is_downed; if already downed, finalize death.
 		if is_downed:
 			_die.rpc()
+			_server_announce_kill(source_peer, "kill")
 		else:
 			_knockdown.rpc()
+			_server_announce_kill(source_peer, "knockdown")
 
 @rpc("authority", "call_local", "reliable")
 func _knockdown() -> void:
@@ -290,5 +302,85 @@ func server_bleedout_tick(dps: float) -> void:
 	hp = max(0.0, hp - dps)
 	if hp <= 0.0:
 		_die.rpc()
+		_server_announce_kill(_last_damage_peer if _last_damage_peer != 0 else -1, "bleedout")
+
+# endregion
+
+# region kill-feed + pickup helpers (D4.5/4.6) ----------------------------
+
+# Server-side memory of who last hurt this player. Used to attribute the
+# kill in the kill feed.
+var _last_damage_peer: int = 0
+var _last_damage_weapon: String = "unknown"
+
+func _weapon_display_for(source_peer: int) -> String:
+	# 0 = the zone, -1 = bleedout. Otherwise look up the source player's
+	# weapon WeaponDef for its display_name.
+	if source_peer == 0:
+		return "zone"
+	if source_peer < 0:
+		return "bleedout"
+	var src := get_tree().root.get_node_or_null("TrainingIsland/Players/%d" % source_peer)
+	if src == null:
+		return "unknown"
+	if src.get("weapon") != null and src.weapon.weapon_def != null:
+		return String(src.weapon.weapon_def.display_name)
+	return "unknown"
+
+func _server_announce_kill(killer_peer: int, kind: String) -> void:
+	if not multiplayer.is_server():
+		return
+	# Find Match to call into. It owns the broadcast RPC.
+	var matches := get_tree().get_nodes_in_group("match")
+	if matches.is_empty():
+		return
+	var weapon := _last_damage_weapon
+	if kind == "knockdown":
+		weapon += " (down)"
+	matches[0].server_announce_kill(killer_peer, peer_id, weapon)
+
+func _try_request_pickup() -> void:
+	# Authority-side hot path: ask Match (server-side) to resolve the closest
+	# unconsumed pickup near us. Server validates everything.
+	var matches := get_tree().get_nodes_in_group("match")
+	if matches.is_empty():
+		return
+	matches[0].server_request_pickup.rpc_id(1)
+
+func _update_pickup_hint() -> void:
+	# Find the closest unconsumed pickup within INTERACT_RANGE of us; if any,
+	# tell our local HUD to show "Press E to pick up X".
+	var huds := get_tree().get_nodes_in_group("match_hud")
+	if huds.is_empty():
+		return
+	var hud: Node = huds[0]
+	var best: Node = null
+	var best_d: float = 2.5
+	for l in get_tree().get_nodes_in_group("loot"):
+		if not is_instance_valid(l) or bool(l.get("consumed")):
+			continue
+		var d: float = global_position.distance_to(l.global_position)
+		if d < best_d:
+			best_d = d
+			best = l
+	if best == null:
+		hud.set_pickup_hint("")
+		return
+	var kind: int = int(best.get("kind"))
+	var rarity: int = int(best.get("rarity"))
+	var payload: String = String(best.get("payload"))
+	var rarity_names := ["common", "uncommon", "rare", "epic"]
+	var hint: String
+	match kind:
+		0:
+			var def_name := payload.get_file().get_basename()
+			hint = "[E] pick up %s %s" % [rarity_names[clamp(rarity, 0, 3)], def_name]
+		1:
+			hint = "[E] equip armor T%s" % payload
+		2:
+			hint = "[E] medkit (+%s hp)" % payload
+		_:
+			hint = "[E] pick up"
+	hud.set_pickup_hint(hint)
 
 # endregion

@@ -50,11 +50,11 @@ last squad standing.
 
 | # | Sub-task | Status | Commit |
 |---|---|---|---|
-| 4.0 | Fix D3 host-spawn `MultiplayerSynchronizer` warning | ✅ | this commit |
-| 4.1 | Movement states: crouch, prone, jump | ⏳ | — |
-| 4.2 | 5 weapons with proper stats (pistol, 2 ARs, SMG, sniper) | ⏳ | — |
-| 4.3 | HP + armor (3 plate tiers) | ⏳ | — |
-| 4.4 | Knockdown + revive (downed state, 30s bleedout, 5s revive) | ⏳ | — |
+| 4.0 | Fix D3 host-spawn `MultiplayerSynchronizer` warning | ✅ | `346c6e8` |
+| 4.1 | Movement states: crouch, prone, jump | ✅ | `8e6fb33` |
+| 4.2 | 5 weapons with proper stats (pistol, 2 ARs, SMG, sniper) | ✅ | `f3eb837` |
+| 4.3 | HP + armor (3 plate tiers) | ✅ | `3bd6fdb` |
+| 4.4 | Knockdown + revive (downed state, 30s bleedout, 5s revive) | ✅ | `3bd6fdb` |
 | 4.5 | Loot system (ground spawns, 4 rarity tiers, E-key pickup) | ⏳ | — |
 | 4.6 | Kill feed HUD (last 5 kills, 5s fade) | ⏳ | — |
 | 4.7 | Lobby UI with room-code entry | ⏳ | — |

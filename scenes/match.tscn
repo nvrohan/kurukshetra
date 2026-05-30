@@ -1,8 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://b0kuru000match0"]
+[gd_scene load_steps=10 format=3 uid="uid://b0kuru000match0"]
 
 [ext_resource type="Script" path="res://scripts/match/match.gd" id="1_match"]
 [ext_resource type="Script" path="res://scripts/match/zone_manager.gd" id="2_zone"]
 [ext_resource type="PackedScene" uid="uid://b0kuru000player" path="res://scenes/player.tscn" id="3_player"]
+[ext_resource type="Script" path="res://scripts/loot/loot_spawner.gd" id="4_loot"]
+[ext_resource type="Script" path="res://scripts/ui/match_hud.gd" id="5_hud"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1"]
 size = Vector2(200, 200)
@@ -19,7 +21,7 @@ size = Vector3(4, 4, 4)
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(4, 4, 4)
 
-[node name="Match" type="Node3D"]
+[node name="TrainingIsland" type="Node3D"]
 script = ExtResource("1_match")
 
 [node name="WorldEnv" type="WorldEnvironment" parent="."]
@@ -87,17 +89,101 @@ shape = SubResource("BoxShape3D_1")
 
 [node name="SpawnPoints" type="Node3D" parent="."]
 
-[node name="Spawn_N" type="Marker3D" parent="SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -50)
+[node name="Spawn_R1_00" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80.00, 1.50, 0.00)
 
-[node name="Spawn_S" type="Marker3D" parent="SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 50)
+[node name="Spawn_R1_01" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.28, 1.50, 40.00)
 
-[node name="Spawn_E" type="Marker3D" parent="SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 1, 0)
+[node name="Spawn_R1_02" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.00, 1.50, 69.28)
 
-[node name="Spawn_W" type="Marker3D" parent="SpawnPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 1, 0)
+[node name="Spawn_R1_03" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00, 1.50, 80.00)
+
+[node name="Spawn_R1_04" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.00, 1.50, 69.28)
+
+[node name="Spawn_R1_05" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -69.28, 1.50, 40.00)
+
+[node name="Spawn_R1_06" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80.00, 1.50, 0.00)
+
+[node name="Spawn_R1_07" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -69.28, 1.50, -40.00)
+
+[node name="Spawn_R1_08" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.00, 1.50, -69.28)
+
+[node name="Spawn_R1_09" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00, 1.50, -80.00)
+
+[node name="Spawn_R1_10" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.00, 1.50, -69.28)
+
+[node name="Spawn_R1_11" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 69.28, 1.50, -40.00)
+
+[node name="Spawn_R2_00" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.30, 1.50, 12.94)
+
+[node name="Spawn_R2_01" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.36, 1.50, 35.36)
+
+[node name="Spawn_R2_02" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.94, 1.50, 48.30)
+
+[node name="Spawn_R2_03" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.94, 1.50, 48.30)
+
+[node name="Spawn_R2_04" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.36, 1.50, 35.36)
+
+[node name="Spawn_R2_05" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.30, 1.50, 12.94)
+
+[node name="Spawn_R2_06" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.30, 1.50, -12.94)
+
+[node name="Spawn_R2_07" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.36, 1.50, -35.36)
+
+[node name="Spawn_R2_08" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.94, 1.50, -48.30)
+
+[node name="Spawn_R2_09" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.94, 1.50, -48.30)
+
+[node name="Spawn_R2_10" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35.36, 1.50, -35.36)
+
+[node name="Spawn_R2_11" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.30, 1.50, -12.94)
+
+[node name="Spawn_R3_00" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.48, 1.50, 7.65)
+
+[node name="Spawn_R3_01" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.65, 1.50, 18.48)
+
+[node name="Spawn_R3_02" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.65, 1.50, 18.48)
+
+[node name="Spawn_R3_03" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.48, 1.50, 7.65)
+
+[node name="Spawn_R3_04" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.48, 1.50, -7.65)
+
+[node name="Spawn_R3_05" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.65, 1.50, -18.48)
+
+[node name="Spawn_R3_06" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.65, 1.50, -18.48)
+
+[node name="Spawn_R3_07" type="Marker3D" parent="SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.48, 1.50, -7.65)
 
 [node name="ZoneManager" type="Node3D" parent="."]
 script = ExtResource("2_zone")
@@ -107,3 +193,65 @@ script = ExtResource("2_zone")
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://scenes/player.tscn")
 spawn_path = NodePath("../Players")
+
+[node name="LootSpawner" type="Node3D" parent="."]
+script = ExtResource("4_loot")
+
+[node name="Loot" type="Node" parent="LootSpawner"]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="LootSpawner"]
+_spawnable_scenes = PackedStringArray("res://scenes/loot_pickup.tscn")
+spawn_path = NodePath("../Loot")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="MatchHud" type="Control" parent="HUD"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("5_hud")
+
+[node name="KillFeed" type="VBoxContainer" parent="HUD/MatchHud"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -440.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 200.0
+grow_horizontal = 0
+alignment = 0
+mouse_filter = 2
+
+[node name="Stats" type="Label" parent="HUD/MatchHud"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -64.0
+offset_right = 320.0
+offset_bottom = -16.0
+grow_vertical = 0
+text = "HP 100  ARMOR 0  ZONE -"
+mouse_filter = 2
+
+[node name="PickupHint" type="Label" parent="HUD/MatchHud"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -120.0
+offset_right = 200.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 0
+text = ""
+horizontal_alignment = 1
+mouse_filter = 2

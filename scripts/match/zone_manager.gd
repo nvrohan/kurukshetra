@@ -1,18 +1,27 @@
 extends Node3D
 class_name ZoneManager
-## ZoneManager — D3 implementation, phases 0-2 only per ADR 0006.
+## ZoneManager — D4.8 full 6-phase schedule.
 ##
-## Server authoritative. Phase schedule (per ARCHITECTURE.md §4.5, truncated):
-##   Phase 0: full map (radius 100 m for 200×200 playground) — wait 90 s
-##   Phase 1: shrink to 50 m over 60 s, then wait 90 s, 1 hp/s outside
-##   Phase 2: shrink to 25 m over 60 s, 2 hp/s outside (D3 stops here)
+## Server authoritative. Phase schedule (per ARCHITECTURE.md §4.5):
+##   Phase 0: full map, no damage, 90 s grace.
+##   Phase 1: shrink to 50 m, 1 hp/s outside.
+##   Phase 2: shrink to 25 m, 2 hp/s outside.
+##   Phase 3: shrink to 12 m, 4 hp/s outside.
+##   Phase 4: shrink to 5 m, 8 hp/s outside.
+##   Phase 5: collapse to 0 m, 15 hp/s outside (last squad standing).
+##
+## Times have been condensed for the v0.1 MVP so a full match runs in ~5 min
+## instead of 25. The schedule is still six phases.
 
 signal phase_changed(phase: int, target_radius: float, shrink_seconds: float)
 
 const PHASE_DEFS := [
-	{"radius": 100.0, "wait": 90.0, "shrink": 0.0, "dps": 0.0},   # phase 0
-	{"radius": 50.0,  "wait": 90.0, "shrink": 60.0, "dps": 1.0},  # phase 1
-	{"radius": 25.0,  "wait": 0.0,  "shrink": 60.0, "dps": 2.0},  # phase 2
+	{"radius": 100.0, "wait": 60.0, "shrink": 0.0,  "dps": 0.0},   # phase 0 — grace
+	{"radius": 50.0,  "wait": 30.0, "shrink": 30.0, "dps": 1.0},   # phase 1
+	{"radius": 25.0,  "wait": 30.0, "shrink": 30.0, "dps": 2.0},   # phase 2
+	{"radius": 12.0,  "wait": 20.0, "shrink": 20.0, "dps": 4.0},   # phase 3
+	{"radius": 5.0,   "wait": 15.0, "shrink": 15.0, "dps": 8.0},   # phase 4
+	{"radius": 0.0,   "wait": 0.0,  "shrink": 10.0, "dps": 15.0},  # phase 5 — collapse
 ]
 
 @export var current_phase: int = 0
@@ -27,8 +36,9 @@ var _shrink_t: float = 0.0
 var _damage_accumulator: float = 0.0  # ticks down per second
 
 func _ready() -> void:
+	add_to_group("zone_manager")
 	if multiplayer.is_server() or not multiplayer.has_multiplayer_peer():
-		print("[ZoneManager] server starting, phase 0")
+		print("[ZoneManager] server starting, phase 0 (6-phase schedule)")
 	current_radius = PHASE_DEFS[0]["radius"]
 	target_radius = current_radius
 

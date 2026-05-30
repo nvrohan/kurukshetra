@@ -85,3 +85,88 @@ func _server_despawn_player(peer_id: int) -> void:
 	if players_root.has_node(str(peer_id)):
 		players_root.get_node(str(peer_id)).queue_free()
 		print("[Match] despawned player for peer %d" % peer_id)
+
+# region kill feed (D4.6) -------------------------------------------------
+
+## Server-only: announce a kill to every peer's HUD.
+## `victim` and `killer` are display strings (e.g. "Player 1234567"),
+## `weapon` is the weapon display name (or "zone" / "bleedout").
+@rpc("authority", "call_local", "reliable")
+func broadcast_kill(killer: String, victim: String, weapon: String) -> void:
+	for hud in get_tree().get_nodes_in_group("match_hud"):
+		if hud.has_method("push_kill"):
+			hud.push_kill(killer, victim, weapon)
+
+## Helper used by Player on the server side. Builds display strings then
+## RPCs broadcast_kill to every peer.
+func server_announce_kill(killer_peer: int, victim_peer: int, weapon: String) -> void:
+	if not (multiplayer.is_server() or not multiplayer.has_multiplayer_peer()):
+		return
+	var killer_name := _peer_display_name(killer_peer)
+	var victim_name := _peer_display_name(victim_peer)
+	broadcast_kill.rpc(killer_name, victim_name, weapon)
+
+func _peer_display_name(peer_id: int) -> String:
+	if peer_id == 0:
+		return "the zone"
+	if peer_id < 0:
+		return "bleedout"
+	var info: Dictionary = GameState.players.get(peer_id, {})
+	if info.has("name") and info["name"]:
+		return String(info["name"])
+	return "Player %d" % peer_id
+
+# endregion
+
+# region loot pickup (D4.5) -----------------------------------------------
+
+## Server-side pickup resolver. Player.try_pickup() RPCs this. We resolve
+## by walking the loot group, finding the closest unconsumed pickup within
+## INTERACT_RANGE of the requesting player's position, and applying its
+## effect server-authoritatively. The pickup then despawns.
+const PICKUP_RANGE := 2.5
+
+@rpc("any_peer", "call_local", "reliable")
+func server_request_pickup() -> void:
+	if not (multiplayer.is_server() or not multiplayer.has_multiplayer_peer()):
+		return
+	var sender_id := multiplayer.get_remote_sender_id()
+	if sender_id == 0:
+		sender_id = multiplayer.get_unique_id()  # local-server pickup
+	if not players_root.has_node(str(sender_id)):
+		return
+	var player := players_root.get_node(str(sender_id))
+	var origin: Vector3 = player.global_position
+	var best: Node = null
+	var best_d: float = PICKUP_RANGE
+	for l in get_tree().get_nodes_in_group("loot"):
+		if not is_instance_valid(l) or bool(l.get("consumed")):
+			continue
+		var d: float = origin.distance_to(l.global_position)
+		if d < best_d:
+			best_d = d
+			best = l
+	if best == null:
+		return
+	if not best.has_method("server_consume"):
+		return
+	if not best.server_consume(sender_id):
+		return
+	var kind: int = int(best.get("kind"))
+	var payload: String = String(best.get("payload"))
+	match kind:
+		0:  # weapon
+			var def: WeaponDef = load(payload)
+			if def != null and player.get("weapon") != null:
+				player.weapon.equip(def)
+				print("[Match] peer %d picked up weapon %s" % [sender_id, def.id])
+		1:  # armor
+			var tier := int(payload)
+			if player.has_method("equip_armor"):
+				player.equip_armor(tier)
+		2:  # med
+			var amount := float(payload)
+			if player.has_method("heal"):
+				player.heal(amount)
+
+# endregion
